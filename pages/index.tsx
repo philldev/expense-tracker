@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import type { NextPage } from 'next'
+import { signIn, useSession } from 'next-auth/react'
 import Head from 'next/head'
 import { useState } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
@@ -7,6 +8,9 @@ import { AddExpenseModal } from '../components/add-expense-modal'
 import { TransactionCard } from '../components/transaction-card'
 
 const Home: NextPage = () => {
+	const { data: session } = useSession()
+	if (session === undefined) return <Loader />
+	if (!session) return <Login />
 	return (
 		<>
 			<Head>
@@ -20,6 +24,24 @@ const Home: NextPage = () => {
 				<Expenses />
 			</div>
 		</>
+	)
+}
+
+const Loader = () => {
+	return (
+		<div className='flex flex-col items-center justify-center h-screen'>
+			<div className='text-6xl font-bold'>Loading...</div>
+		</div>
+	)
+}
+
+const Login = () => {
+	return (
+		<div className='flex flex-col items-center justify-center h-screen'>
+			<div className='text-6xl font-bold' onClick={() => signIn('google')}>
+				Login
+			</div>
+		</div>
 	)
 }
 
