@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import type { NextPage } from 'next'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import Head from 'next/head'
 import { useState } from 'react'
 import { FiSearch, FiX } from 'react-icons/fi'
@@ -17,9 +17,16 @@ const Home: NextPage = () => {
 				<title>Expense Tracker</title>
 			</Head>
 			<div className='flex flex-col w-screen h-screen overflow-hidden text-black bg-gray-100'>
-				<div className='relative flex flex-col pt-8 space-y-5'>
+				<div className='relative flex flex-col py-8 space-y-5'>
+					<div className='flex items-center px-4 space-x-2'>
+						<div className='flex-1 font-light'>
+							Hello <span className='font-medium'>{session.user?.name}</span>
+						</div>
+						<button className='h-8 px-2' onClick={() => signOut()}>
+							logout
+						</button>
+					</div>
 					<ExpenseOverview />
-					<AddExpense />
 				</div>
 				<Expenses />
 			</div>
@@ -38,9 +45,13 @@ const Loader = () => {
 const Login = () => {
 	return (
 		<div className='flex flex-col items-center justify-center h-screen'>
-			<div className='text-6xl font-bold' onClick={() => signIn('google')}>
+			<div className='mb-8 text-2xl font-light'>Expense Tracker App</div>
+			<button
+				className='h-8 px-2 text-white bg-black rounded-md'
+				onClick={() => signIn('google')}
+			>
 				Login
-			</div>
+			</button>
 		</div>
 	)
 }
@@ -75,11 +86,12 @@ const ExpenseOverview = () => {
 					Month
 				</button>
 			</div>
-			<div className='flex flex-col px-4'>
+			<div className='relative flex flex-col px-4'>
 				<div className='text-4xl font-medium'>$234</div>
 				<div className='text-sm font-light text-gray-500'>
 					Spent this {dateRange}
 				</div>
+				<AddExpense />
 			</div>
 		</>
 	)
@@ -140,7 +152,7 @@ const AddExpense = () => {
 		<div>
 			<button
 				onClick={open}
-				className='absolute w-8 h-8 text-sm font-medium text-white bg-black rounded-full right-4 top-8'
+				className='absolute w-8 h-8 text-sm font-medium text-white bg-black rounded-full top-4 right-4'
 			>
 				+
 			</button>
